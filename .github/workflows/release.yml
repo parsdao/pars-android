@@ -9,7 +9,7 @@ on:
       version:
         description: 'Version tag (e.g., v1.0.0)'
         required: true
-        default: 'v1.0.0'
+        default: 'v0.1.0'
 
 permissions:
   contents: write
@@ -20,7 +20,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        variant: [ 'play', 'fdroid' ]
+        variant: [ 'play', 'fdroid', 'website' ]
     steps:
       - uses: actions/checkout@v4
         with:
@@ -40,24 +40,28 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      - name: Build Release APK
-        run: ./gradlew assemble${{ matrix.variant }}Release --stacktrace
+      # Build QA variant (unsigned) instead of release which requires signing keys
+      - name: Build QA APK (unsigned)
+        run: ./gradlew assemble${{ matrix.variant }}Qa --stacktrace
 
-      - name: Upload Release APK
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: pars-${{ matrix.variant }}-release
-          path: app/build/outputs/apk/${{ matrix.variant }}/release/*.apk
+          name: pars-${{ matrix.variant }}-qa
+          path: app/build/outputs/apk/${{ matrix.variant }}/qa/*-universal*.apk
           if-no-files-found: warn
+          compression-level: 0
 
   create_release:
     needs: build_release
     runs-on: ubuntu-latest
+    if: always()
     steps:
       - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
           path: artifacts
+        continue-on-error: true
 
       - name: Get version
         id: version
@@ -68,11 +72,23 @@ jobs:
             echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
           fi
 
+      - name: List artifacts
+        run: find artifacts -type f -name "*.apk" || echo "No APKs found"
+
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
           tag: ${{ steps.version.outputs.VERSION }}
           name: "Pars Android ${{ steps.version.outputs.VERSION }}"
           artifacts: "artifacts/**/*.apk"
+          body: |
+            ## Pars Messenger Android ${{ steps.version.outputs.VERSION }}
+
+            **Note:** These are unsigned QA builds for testing. For production use, build from source with your own signing keys.
+
+            ### Variants
+            - **play**: Google Play Store variant
+            - **fdroid**: F-Droid variant (no proprietary dependencies)
+            - **website**: Direct download variant
           draft: true
-          generateReleaseNotes: true
+          allowUpdates: true
