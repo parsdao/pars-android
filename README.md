@@ -1,94 +1,130 @@
-# Session Android 
+# Lux Messenger Android
 
-[Download on the Google Play Store](https://getsession.org/android)
+> Private messaging on the Lux Network - A fork of [Session Android](https://github.com/session-foundation/session-android)
 
-Add the [F-Droid repo](https://fdroid.getsession.org/)
+## Overview
 
-[Download the APK from here](https://github.com/session-foundation/session-android/releases/latest)
+Lux Messenger Android is a fork of Session Android, intended to connect to the Lux Network's SessionVM instead of the Oxen network. This app provides end-to-end encrypted messaging with post-quantum cryptographic protection.
 
-## Summary
+## Current Status
 
-Session integrates directly with [Oxen Service Nodes](https://docs.oxen.io/about-the-oxen-blockchain/oxen-service-nodes), which are a set of distributed, decentralized and Sybil resistant nodes. Service Nodes act as servers which store messages offline, and a set of nodes which allow for onion routing functionality obfuscating users' IP addresses. For a full understanding of how Session works, read the [Session Whitepaper](https://getsession.org/whitepaper).
+**Integration Status: In Progress**
 
-<img src="https://i.imgur.com/wcdAGBh.png" width="320" />
+The Android app currently uses `libsession-util` for networking, which has hardcoded network endpoints. Full integration with the Lux SessionVM requires modifications to the underlying C++ library.
 
-## Want to contribute? Found a bug or have a feature request?
+### What Works
+- Building and running the app
+- Core messaging functionality (against Session mainnet)
 
-Please search for any [existing issues](https://github.com/session-foundation/session-android/issues) that describe your bugs in order to avoid duplicate submissions. Submissions can be made by making a pull request to our `dev` branch. If you don't know where to start contributing, try reading the Github issues page for ideas.
+### What Needs Work
+- Network configuration to connect to Lux SessionVM
+- libsession-util modifications for custom network support
+- Branding updates (Lux Messenger)
 
-## Build instructions
+## Building
 
-Build instructions can be found in [BUILDING.md](BUILDING.md).
+### Prerequisites
 
-## Translations
+- Android Studio Arctic Fox or later
+- Android SDK 21+
+- JDK 11+
 
-Want to help us translate Session into your language? You can do so at https://getsession.org/translate
+### Build Steps
 
-## Verifying signatures
-
-**Step 1:**
-
-Add Jason's GPG key. Jason Rhinelander, a member of the [Session Technology Foundation](https://session.foundation/) and is the current signer for all Session Android releases. His GPG key can be found on his GitHub and other sources.
-
-```
-wget https://github.com/jagerman.gpg
-gpg --import jagerman.gpg
-```
-
-**Step 2:**
-
-Get the signed hashes for this release. `SESSION_VERSION` needs to be updated for the release you want to verify.
-
-```
-export SESSION_VERSION=1.20.8
-wget https://github.com/session-foundation/session-android/releases/download/$SESSION_VERSION/signature.asc
+1. Clone the repository:
+```bash
+git clone https://github.com/lux-tel/session-android
+cd session-android
 ```
 
-**Step 3:**
+2. Open in Android Studio
 
-Verify the signature of the hashes of the files.
+3. Sync Gradle dependencies
 
-```
-gpg --verify signature.asc 2>&1 |grep "Good signature from"
-```
+4. Build and run
 
-The command above should print "`Good signature from "Jason Rhinelander...`". If it does, the hashes are valid but we still have to make the sure the signed hashes match the downloaded files.
+### Command Line Build
 
-**Step 4:**
-
-Make sure the two commands below return the same hash for the file you are checking. If they do, file is valid.
-
-```
-sha256sum session-$SESSION_VERSION-universal.apk
-grep universal.apk signature.asc
+```bash
+./gradlew assembleDebug
 ```
 
-## Testing
-### BrowserStack
+## Architecture
 
-This project is tested with BrowserStack.
+```
+Session Android
+├── app/                    # Main application module
+├── libsession-util/        # JNI bindings to C++ library
+├── libsignal/              # Signal protocol implementation
+└── core-utils/             # Shared utilities
+
+Network Layer
+└── libsession-util (C++ via JNI)
+    └── Hardcoded network endpoints
+```
+
+## Configuration for Lux Network
+
+### Current Limitation
+
+Similar to iOS, Android uses `libsession-util` for networking with hardcoded endpoints.
+
+### Planned Approach
+
+To enable Lux network connectivity:
+
+1. **Modify libsession-util** (`lux-tel/libsession-util`)
+   - Add environment-based configuration
+   - Support custom seed node URLs
+   - Support custom file server URLs
+
+2. **Update Android JNI bindings**
+   - Pass Lux network configuration to LibSession
+   - Update UI branding
+
+## Related Repositories
+
+| Repository | Description |
+|------------|-------------|
+| [luxfi/session](https://github.com/luxfi/session) | Go SessionVM + API layer |
+| [luxcpp/session](https://github.com/luxcpp/session) | C++ storage server |
+| [lux-tel/libsession-util](https://github.com/lux-tel/libsession-util) | Native library (needs modification) |
+| [lux-tel/session-desktop](https://github.com/lux-tel/session-desktop) | Desktop client (configured) |
+| [lux-tel/session-ios](https://github.com/lux-tel/session-ios) | iOS client |
+
+## Development
+
+### Key Directories
+
+| Directory | Description |
+|-----------|-------------|
+| `app/src/main/java/org/thoughtcrime/securesms/` | Main application code |
+| `libsession-util/` | JNI bindings to C++ library |
+| `libsession/` | Session-specific crypto/network |
+
+### Building Debug APK
+
+```bash
+./gradlew assemblePlayDebug
+```
+
+### Running Tests
+
+```bash
+./gradlew test
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
 
 ## License
 
-Copyright 2011 Whisper Systems
+GPL-3.0 - Same as upstream Session Android
 
-Copyright 2013-2017 Open Whisper Systems
+## Upstream
 
-Copyright 2019-2024 The Oxen Project
-
-Copyright 2024-2025 Session Technology Foundation
-
-Licensed under the GPLv3: http://www.gnu.org/licenses/gpl-3.0.html
-
-## Attributions
-
-This project uses [Lucide Icon Font](https://lucide.dev/), which is licensed under the
-[ISC License](third_party_licenses/LucideLicense.txt).
-
-## Socials
-<a href="https://twitter.com/session_app">
-  <img align="left" width="26px" src="https://www.vectorlogo.zone/logos/twitter/twitter-official.svg" />
-</a>
-<a href="mailto:support@getsession.org">
-  <img align="left" width="26px" src="https://www.vectorlogo.zone/logos/gmail/gmail-icon.svg" />
-</a>
+This project is a fork of [Session Android](https://github.com/session-foundation/session-android) by the Session Technology Foundation.
