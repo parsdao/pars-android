@@ -23,33 +23,39 @@ The Android app uses `libsession-util` for networking. Full Pars Network integra
 - libsession-util modifications
 - Pars branding updates
 
-## Building
+## Installation
 
-### Prerequisites
+### Option 1: Download APK (Easiest)
 
-- Android Studio Arctic Fox or later
+Download the latest APK from [Releases](https://github.com/parsdao/pars-android/releases):
+
+| Variant | Description |
+|---------|-------------|
+| **play** | Google Play Store variant |
+| **fdroid** | F-Droid variant (no proprietary dependencies) |
+| **website** | Direct download variant |
+
+**To install:** Enable "Install from unknown sources" in Android settings, then open the APK.
+
+### Option 2: Build from Source
+
+**Prerequisites:**
+- Android Studio (latest)
+- JDK 21
 - Android SDK 21+
-- JDK 11+
 
-### Build Steps
-
-1. Clone the repository:
+**Steps:**
 ```bash
 git clone https://github.com/parsdao/pars-android
 cd pars-android
+./gradlew assemblePlayQa
 ```
 
-2. Open in Android Studio
+APK will be in `app/build/outputs/apk/play/qa/`
 
-3. Sync Gradle dependencies
+### Option 3: F-Droid (Coming Soon)
 
-4. Build and run
-
-### Command Line Build
-
-```bash
-./gradlew assembleDebug
-```
+We're working on F-Droid distribution. Track progress at [pars.network](https://pars.network).
 
 ## Architecture
 
