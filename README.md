@@ -1,25 +1,27 @@
-# Lux Messenger Android
+# Pars Messenger Android
 
-> Private messaging on the Lux Network - A fork of [Session Android](https://github.com/session-foundation/session-android)
+[![License: GPL-3.0](https://img.shields.io/badge/License-GPL%203.0-blue.svg)](LICENSE)
+
+> Private messaging for the Pars Network - Built on [pars.network](https://pars.network)
 
 ## Overview
 
-Lux Messenger Android is a fork of Session Android, intended to connect to the Lux Network's SessionVM instead of the Oxen network. This app provides end-to-end encrypted messaging with post-quantum cryptographic protection.
+Pars Messenger Android is a privacy-focused messaging app for the Pars Network, featuring end-to-end encryption with post-quantum cryptography. Messages are stored on decentralized storage nodes and routed through onion routing for maximum privacy.
 
 ## Current Status
 
 **Integration Status: In Progress**
 
-The Android app currently uses `libsession-util` for networking, which has hardcoded network endpoints. Full integration with the Lux SessionVM requires modifications to the underlying C++ library.
+The Android app uses `libsession-util` for networking. Full Pars Network integration requires modifications to the underlying C++ library.
 
 ### What Works
 - Building and running the app
-- Core messaging functionality (against Session mainnet)
+- Core messaging functionality
 
 ### What Needs Work
-- Network configuration to connect to Lux SessionVM
-- libsession-util modifications for custom network support
-- Branding updates (Lux Messenger)
+- Network configuration for Pars SessionVM
+- libsession-util modifications
+- Pars branding updates
 
 ## Building
 
@@ -33,8 +35,8 @@ The Android app currently uses `libsession-util` for networking, which has hardc
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/lux-tel/session-android
-cd session-android
+git clone https://github.com/parsdao/pars-android
+cd pars-android
 ```
 
 2. Open in Android Studio
@@ -52,7 +54,7 @@ cd session-android
 ## Architecture
 
 ```
-Session Android
+Pars Messenger Android
 ├── app/                    # Main application module
 ├── libsession-util/        # JNI bindings to C++ library
 ├── libsignal/              # Signal protocol implementation
@@ -60,37 +62,28 @@ Session Android
 
 Network Layer
 └── libsession-util (C++ via JNI)
-    └── Hardcoded network endpoints
+    └── Network endpoints (needs configuration for Pars)
 ```
 
-## Configuration for Lux Network
-
-### Current Limitation
-
-Similar to iOS, Android uses `libsession-util` for networking with hardcoded endpoints.
-
-### Planned Approach
-
-To enable Lux network connectivity:
-
-1. **Modify libsession-util** (`lux-tel/libsession-util`)
-   - Add environment-based configuration
-   - Support custom seed node URLs
-   - Support custom file server URLs
-
-2. **Update Android JNI bindings**
-   - Pass Lux network configuration to LibSession
-   - Update UI branding
-
-## Related Repositories
+## Pars Ecosystem
 
 | Repository | Description |
 |------------|-------------|
-| [luxfi/session](https://github.com/luxfi/session) | Go SessionVM + API layer |
-| [luxcpp/session](https://github.com/luxcpp/session) | C++ storage server |
-| [lux-tel/libsession-util](https://github.com/lux-tel/libsession-util) | Native library (needs modification) |
-| [lux-tel/session-desktop](https://github.com/lux-tel/session-desktop) | Desktop client (configured) |
-| [lux-tel/session-ios](https://github.com/lux-tel/session-ios) | iOS client |
+| [parsdao/pars-android](https://github.com/parsdao/pars-android) | Android client (this repo) |
+| [parsdao/pars-ios](https://github.com/parsdao/pars-ios) | iOS mobile client |
+| [parsdao/pars-desktop](https://github.com/parsdao/pars-desktop) | Desktop client |
+| [parsdao/pars-libsession](https://github.com/parsdao/pars-libsession) | Native crypto library |
+| [parsdao/node](https://github.com/parsdao/node) | Pars blockchain node |
+
+## Features
+
+- End-to-end encryption (post-quantum)
+- Decentralized message storage
+- Onion routing for privacy
+- Disappearing messages
+- Group chats
+- Voice messages
+- Photo/file sharing
 
 ## Development
 
@@ -116,15 +109,22 @@ To enable Lux network connectivity:
 
 ## Contributing
 
-1. Fork the repository
+1. Fork this repository
 2. Create a feature branch
 3. Make your changes
 4. Submit a pull request
 
+## Resources
+
+- **Website:** [pars.network](https://pars.network)
+- **Documentation:** [docs.pars.network](https://docs.pars.network)
+- **PIPs:** [github.com/parsdao/pips](https://github.com/parsdao/pips)
+
 ## License
 
-GPL-3.0 - Same as upstream Session Android
+GPL-3.0 - See [LICENSE](LICENSE)
 
-## Upstream
+## Acknowledgments
 
-This project is a fork of [Session Android](https://github.com/session-foundation/session-android) by the Session Technology Foundation.
+- Fork of [Session Android](https://github.com/session-foundation/session-android)
+- Built on [Lux Network](https://lux.network) technology
